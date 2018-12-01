@@ -16,10 +16,10 @@ const splitLines = split('\n')
 // -- convertToNumbers :: [String] -> [Numbers]
 const convertToNumbers = map(parseInt)
 
-// -- addValues :: [Numbers] -> Sum Number
+// -- addValues :: [Number] -> Sum Number
 const addValues = xs => mconcat(Sum, xs)
 
-// -- chronalCalibration :: String ->
+// -- chronalCalibration :: String -> Sum Number
 const chronalCalibration = compose(
   map(addValues),
   map(convertToNumbers),
