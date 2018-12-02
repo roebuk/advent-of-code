@@ -17,7 +17,7 @@ const groupChars = map(compose(
 ))
 
 // -- incrementByIndex :: Number -> [Number, Number]
-const incrementByIndex = (index) => over(lensIndex(index), inc)
+const incrementByIndex = index => over(lensIndex(index), inc)
 
 // -- foundAtLeastOneMatchingItem = (a -> Boolean) -> Boolean
 const foundAtLeastOneMatchingItem = predicate => compose(
@@ -26,25 +26,23 @@ const foundAtLeastOneMatchingItem = predicate => compose(
   filter(predicate)
 )
 
-// -- findMatchingBoxIDs :: [] -> [Number, Number]
-const findMatchingBoxIDs = reduce((acc, id) => {
+// -- addMatchingBoxIDs :: [] -> [Number, Number]
+const addMatchingBoxIDs = reduce((acc, id) => {
   // Too tired to clean up this function.
-  const updatedWidthTwos = foundAtLeastOneMatchingItem(hasLengthOfTwo)(id)
-    ? incrementByIndex(0)(acc)
-    : acc;
-  return updatedWidthThrees = foundAtLeastOneMatchingItem(hasLengthOfThree)(id)
-    ? incrementByIndex(1)(updatedWidthTwos)
-    : updatedWidthTwos;
+  const updatedWidthTwos = foundAtLeastOneMatchingItem(hasLengthOfTwo)(id) ? incrementByIndex(0)(acc) : acc;
+
+  return updatedWidthThrees = foundAtLeastOneMatchingItem(hasLengthOfThree)(id) ? incrementByIndex(1)(updatedWidthTwos) : updatedWidthTwos;
 }, [0, 0])
 
-// -- makeResult :: [Number, Number] -> IO String
-const makeResult = ([twos, threes]) => console.log(`The checksum is: ${twos * threes}`)
+// -- makeResult :: [Number, Number] -> String
+const makeResult = ([twos, threes]) => `The checksum is: ${twos * threes}`
 
 const inventoryManagementSystem = compose(
-  map(findMatchingBoxIDs),
+  map(makeResult),
+  map(addMatchingBoxIDs),
   map(groupChars),
   map(splitLines),
   readFile
 )
 
-inventoryManagementSystem('input.txt').fork(console.error, makeResult)
+inventoryManagementSystem('input.txt').fork(console.error, console.log)
