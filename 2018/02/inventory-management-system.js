@@ -1,38 +1,30 @@
-const { compose, equals, filter, groupWith, inc, isEmpty, length, lensIndex, map, not, over,
-  reduce, sort, split } = require('ramda')
+const { compose, equals, filter, groupWith, inc, isEmpty, length, map, not, reduce, sort, split
+} = require('ramda')
 const { readFile, splitLines } = require('../helpers')
 
 // -- hasLengthOf..  :: [Char] -> Boolean
 const hasLengthOfTwo = arr => equals(2, length(arr))
 const hasLengthOfThree = arr => equals(3, length(arr))
 
-// -- sortCharsAlphabetically :: (String -> String) -> Number
-const sortCharsAlphabetically = (a, b) => a.localeCompare(b)
-
 // -- groupChars :: String -> [[Char]]
 const groupChars = map(compose(
   groupWith(equals),
-  sort(sortCharsAlphabetically),
+  sort((a, b) => a.localeCompare(b)),
   split('')
 ))
 
-// -- incrementByIndex :: Number -> [Number, Number]
-const incrementByIndex = index => over(lensIndex(index), inc)
-
-// -- foundAtLeastOneMatchingItem = (a -> Boolean) -> Boolean
-const foundAtLeastOneMatchingItem = predicate => compose(
+// -- foundAtLeastOneMatchingItem = (a -> Boolean, Number) -> Boolean
+const foundAtLeastOneMatchingItem = (predicate, id) => compose(
   not,
   isEmpty,
   filter(predicate)
-)
+)(id)
 
 // -- addMatchingBoxIDs :: [] -> [Number, Number]
-const addMatchingBoxIDs = reduce((acc, id) => {
-  // Too tired to clean up this function.
-  const updatedWidthTwos = foundAtLeastOneMatchingItem(hasLengthOfTwo)(id) ? incrementByIndex(0)(acc) : acc;
-
-  return updatedWidthThrees = foundAtLeastOneMatchingItem(hasLengthOfThree)(id) ? incrementByIndex(1)(updatedWidthTwos) : updatedWidthTwos;
-}, [0, 0])
+const addMatchingBoxIDs = reduce(([twos, threes], id) => [
+  foundAtLeastOneMatchingItem(hasLengthOfTwo, id) ? inc(twos) : twos,
+  foundAtLeastOneMatchingItem(hasLengthOfThree, id) ? inc(threes) : threes
+], [0, 0])
 
 // -- makeResult :: [Number, Number] -> String
 const makeResult = ([twos, threes]) => `The checksum is: ${twos * threes}`
