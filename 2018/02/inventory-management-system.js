@@ -1,5 +1,4 @@
-const { compose, equals, filter, groupWith, inc, isEmpty, length, map, not, reduce, sort, split
-} = require('ramda')
+const { compose, equals, filter, groupWith, inc, isEmpty, length, map, not, reduce, sort, split } = require('ramda')
 const { readFile, splitLines } = require('../helpers')
 
 // -- hasLengthOf..  :: [Char] -> Boolean
