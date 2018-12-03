@@ -6,5 +6,5 @@ doubt I won't be able to complete it all.
 
 I've started programming the solutions in JavaScript as that's most familar to myself. I'm leaning
 on a couple of functional libraries (`crocks` and `ramda`) to aid the programming style I feel
-comfortable with. I may try the odd solution in Elixir, should I'm feeling brave!
+comfortable with. I may try the odd solution in Elixir should I feel brave!
 
