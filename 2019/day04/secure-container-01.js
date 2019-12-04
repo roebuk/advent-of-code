@@ -6,44 +6,31 @@ readFile("./input.txt", "utf-8", (_err, data) => {
     .split("-")
     .map(Number);
 
-  main(lower, upper);
+  var validPasswords = [];
+
+  for (var pass = lower; pass < upper; ++pass) {
+    var password = pass.toString();
+    isValidPassword(password) && validPasswords.push(pass)
+  }
+
+  console.log('Valid passwords:', validPasswords.length)
 });
 
-const matchAdjacent = /(.)\1/;
 
-const isIncreasing = pass =>
-  pass.split("").reduce((acc, item, index, array) => {
-    if (acc === false) return acc;
-    const nextItem = array[index + 1];
-    if (!nextItem) return acc;
 
-    return item <= nextItem;
-  }, true);
+const hasAdjacentDigits = pass => Boolean(pass.match(/(.)\1/ugi))
 
-const isValidPassword = pass => {
-  if (pass.length !== 6) {
-    return false;
+const hasIncrementingDigits = (pass, index) => {
+  const [fst, snd] = pass.substring(index, index + 2)
+
+  if (!snd) return true;
+
+  if (fst <= snd) {
+    return hasIncrementingDigits(pass, index + 1)
+  } else {
+    return false
   }
+}
 
-  if (!matchAdjacent.test(pass)) {
-    return false;
-  }
-
-  if (!isIncreasing(pass)) {
-    return false;
-  }
-
-  return true;
-};
-
-const main = (lower, upper) => {
-  var totallyGoodPasswords = 0;
-  for (var i = lower; i < upper; ++i) {
-    const isValid = isValidPassword(i.toString());
-
-    if (isValid) {
-      totallyGoodPasswords = totallyGoodPasswords + 1;
-    }
-  }
-  console.log(totallyGoodPasswords);
-};
+const isValidPassword = (pass) =>
+  hasAdjacentDigits(pass) && hasIncrementingDigits(pass, 0)
