@@ -6,55 +6,59 @@ readFile("./input.txt", "utf-8", (_err, data) => {
     .split(",")
     .map(Number);
 
-  input[1] = 12;
-  input[2] = 2;
-
-  console.log(parse(input, 0));
+  console.log(intMachine(input, 0));
 });
 
-const parse = (data, offset) => {
-  const input = 1;
-  const opCode = data[offset];
-  const operation = opCode % 100;
+const POSITION_MODE = 0;
+const IMMEDIATE_MODE = 1;
+const input = 1;
 
-  console.log(operation);
+const parseCode = numbers => {
+  const opCode = parseInt(numbers % 100)
+  const thousands = parseInt(numbers / 1000)
+  const hundreds = parseInt(numbers / 100 % 10)
 
-  if (operation === 1) {
-    const dataLocator1 = data[offset + 1];
-    const dataLocator2 = data[offset + 2];
-    const resultLocation = data[offset + 3];
+  return [opCode, hundreds, thousands, 0]
+}
 
-    data[resultLocation] = data[dataLocator1] + data[dataLocator2];
-    return parse(data, offset + 4);
+const getValue = (data, value, mode) => {
+  return (mode === POSITION_MODE) ? data[value] : value;
+}
+
+const intMachine = (data, offset) => {
+  const [op, first, second] = parseCode(data[offset])
+  const para1 = getValue(data, data[offset + 1], first);
+  const para2 = getValue(data, data[offset + 2], second);
+
+  if (op === 1) {
+    const saveLocation = data[offset + 3]
+    data[saveLocation] = para1 + para2
+    return intMachine(data, offset + 4);
   }
 
-  if (operation === 2) {
-    const dataLocator1 = data[offset + 1];
-    const dataLocator2 = data[offset + 2];
-    const resultLocation = data[offset + 3];
-
-    data[resultLocation] = data[dataLocator1] * data[dataLocator2];
-    return parse(data, offset + 4);
+  if (op === 2) {
+    const saveLocation = data[offset + 3]
+    data[saveLocation] = para1 * para2;
+    return intMachine(data, offset + 4);
   }
 
-  if (operation === 3) {
-    debugger;
-    const resultLocation = data[offset + 1];
-    data[resultLocation] = input;
+  if (op === 3) {
+    const saveLocation = data[offset + 1]
+    data[saveLocation] = input;
 
-    return parse(data, offset + 2);
+    return intMachine(data, offset + 2);
   }
 
-  if (operation === 4) {
-    const resultLocation = data[offset + 1];
-    console.log(`output : ${data[resultLocation]}`);
+  if (op === 4) {
+    // console.log(`output : ${data[offset + 1]}`);
 
-    return parse(data, offset + 2);
+    return intMachine(data, offset + 2);
   }
 
-  if (operation === 99) {
-    return data[0];
+  if (op === 99) {
+    return data[offset + 1];
   }
 
-  throw new Error("Unsupported Op Code: " + operation);
+
+  throw new Error("Unsupported Op Code: " + op);
 };

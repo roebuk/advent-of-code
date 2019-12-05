@@ -27,11 +27,8 @@ readFile('./input.txt', 'utf-8', (_err, data) => {
   const wireSetTwo = getPoints(wireTwo)
 
   const matchingCoords = getMatchingCoords(wireSetOne, wireSetTwo);
-  const xxx = matchingCoords
-    .map(x => x.split(',')
-      .map(x => Number(Math.abs(x))))
-    .map(([x, y]) => x + y)
-  console.log(xxx)
+  const xxx = matchingCoords.map(([x, y]) => x + y)
+  // console.log(xxx)
 })
 
 
@@ -39,7 +36,9 @@ const getMatchingCoords = (one, two) => {
   var matches = []
   one.forEach(item => {
     if (two.has(item)) {
-      matches.push(item);
+      var coord = item.split(',').map(x => Number(Math.abs(x)))
+      console.log(coord)
+      matches.push(coord);
     }
   })
 
