@@ -7,17 +7,29 @@ readFile('./input.txt', 'utf-8', (_err, data) => {
 
   const wireOne = getPath(parseData(wireOneRaw))
   const wireTwo = getPath(parseData(wireTwoRaw))
-  const intersection = new Set(
-    [...wireTwo].filter(x => wireOne.has(x)));
+  // This is horrendously slow. Gets the job done though :P
+  const intersection = wireTwo.reduce((acc, x) => {
+    const match = wireOne.find(one => one.x === x.x && one.y === x.y)
 
-  const shortestDistance = [...intersection].reduce((acc, item) => {
-    const [item1, item2] = item.split(',')
-    const distance = Math.abs(Number(item1)) + Math.abs(Number(item2))
-    return distance < acc ? distance : acc
-  }, Infinity)
+    if (match) {
+      const distance = x.step + match.step
+      return distance < acc ? distance : acc
+    }
+
+    return acc
+  }, Infinity);
+  console.log(intersection)
+  // const intersection = new Set(
+  //   [...wireTwo].filter(x => wireOne.has(x)));
+
+  // const shortestDistance = [...intersection].reduce((acc, item) => {
+  //   const [item1, item2] = item.split(',')
+  //   const distance = Math.abs(Number(item1)) + Math.abs(Number(item2))
+  //   return distance < acc ? distance : acc
+  // }, Infinity)
 
 
-  console.log(shortestDistance)
+  // console.log(wireTwo)
 })
 
 
@@ -39,9 +51,9 @@ const getDirectionAndMag = {
 
 
 const getPath = (wire) => {
-  const coords = new Set()
+  const coords = []
+  var step = 1
   var position = { x: 0, y: 0 }
-
 
   for (var x = 0; x < wire.length; ++x) {
     const [direction, distance] = wire[x]
@@ -50,7 +62,8 @@ const getPath = (wire) => {
     for (var i = 0; i < distance; ++i) {
       const newPos = position[axis] + mag
       position = { ...position, [axis]: newPos }
-      coords.add(`${position.x},${position.y}`)
+      coords.push({ x: position.x, y: position.y, step: step })
+      ++step
     };
   }
 
