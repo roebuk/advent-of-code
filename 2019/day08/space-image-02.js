@@ -1,11 +1,6 @@
 const { readFile } = require("fs")
 const R = require('ramda')
 
-const SHAPES = {
-  black: ' ',
-  white: '▮',
-}
-
 const convertToNumbers = R.pipe(
   R.split(''),
   R.map(Number)
@@ -24,7 +19,7 @@ readFile("./input.txt", "utf-8", (_err, data) => {
     layers => layers.reduceRight((image, layer, layerIndex) => {
       layer.forEach((pixel, idx) => {
         if (pixel === 2) return;
-        image[idx] = pixel === 0 ? SHAPES.black : SHAPES.white
+        image[idx] = pixel === 0 ? ' ' : '▮'
       });
 
       return image
