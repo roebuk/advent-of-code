@@ -7,7 +7,7 @@ const getNumberOfZeros = R.pipe(
 )
 
 readFile("./input.txt", "utf-8", (_err, data) => {
-  const input = R.pipe(
+  R.pipe(
     R.trim,
     R.splitEvery(6 * 25),
     R.reduce(((acc, item) => {
