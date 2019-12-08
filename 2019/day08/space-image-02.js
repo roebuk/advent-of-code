@@ -4,8 +4,8 @@ const R = require('ramda')
 const SHAPES = {
   black: ' ',
   white: '▮',
-  trans: ' '
 }
+
 const convertToNumbers = R.pipe(
   R.split(''),
   R.map(Number)
