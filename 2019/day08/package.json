@@ -1,0 +1,15 @@
+{
+  "name": "day08",
+  "version": "1.0.0",
+  "description": "The Elves' spirits are lifted when they realize you have an opportunity to reboot one of their Mars rovers, and so they are curious if you would spend a brief sojourn on Mars. You land your ship near the rover.",
+  "main": "space-image-01.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ramda": "^0.26.1"
+  }
+}
