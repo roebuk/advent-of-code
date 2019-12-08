@@ -17,7 +17,7 @@ const draw = R.pipe(
 )
 
 readFile("./input.txt", "utf-8", (_err, data) => {
-  R.pipe(
+  console.log(R.pipe(
     R.trim,
     R.splitEvery(6 * 25),
     R.map(convertToNumbers),
@@ -30,7 +30,7 @@ readFile("./input.txt", "utf-8", (_err, data) => {
       return image
 
     }, [...new Array(100).fill(' ')]),
-    draw,
-    R.tap(x => console.log(x))
+    draw
   )(data)
+  )
 });
