@@ -7,7 +7,7 @@ readFile("./input.txt", "utf-8", (_err, data) => {
     .map(x => x.split(')'))
     .map(createOrbit)
 
-  console.log(totalAncestors(input))
+  console.log(distance(input))
 });
 
 const createOrbit = ([parent, child]) => ({
@@ -15,21 +15,40 @@ const createOrbit = ([parent, child]) => ({
   child: child.trim()
 })
 
+
 const makeTree = orbits =>
   orbits.reduce((acc, { parent, child }) => {
     acc[child] = parent
     return acc
   }, {})
 
+
 const countAncestors = (child, parents, count = 0) =>
   (child !== 'COM')
     ? countAncestors(parents[child], parents, count + 1)
     : count
 
-const totalAncestors = orbits => {
+
+const pathToCOM = (child, parents) => {
+  const arr = [child]
+
+  while (child !== 'COM') {
+    var child = parents[child]
+    arr.push(child)
+  }
+
+  return arr
+}
+
+const distance = orbits => {
   const parents = makeTree(orbits)
-  const children = Object.keys(parents)
-  return children.reduce((acc, item) => {
-    return acc + countAncestors(item, parents)
-  }, 0)
+  var path1 = pathToCOM('YOU', parents).reverse()
+  var path2 = pathToCOM('SAN', parents).reverse()
+
+  return path2.reduce((acc, item, index) =>
+    item !== path1[index] ? [...acc, item, path1[index]] : acc
+    , [])
+    .filter(Boolean)
+    .filter(x => x !== 'SAN' && x !== 'YOU')
+    .length
 }
