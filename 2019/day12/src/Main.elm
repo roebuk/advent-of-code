@@ -1,8 +1,8 @@
-module Main exposing (Model, Moon, Msg(..), calcPotenialEnergy, init, main, update, view)
+module Main exposing (Model, Moon, Msg(..), init, main, update, view)
 
 import Dict exposing (Dict)
 import Browser
-import Html exposing (Html, div, h1, p, text)
+import Html exposing (Html, div, p, text)
 import Html.Attributes as Attrs
 import List.Extra exposing (uniquePairs)
 import Time
@@ -56,7 +56,6 @@ init =
       }
     , Cmd.none
     )
-
 
 
 ---- HELPERS ----
@@ -199,7 +198,6 @@ view model =
         , p [ Attrs.class "text" ] [ text "Total system energy" ]
         , p [ Attrs.class "text mod-large" ] [ text totalEnergy ]
         ]
-
 
 
 ---- PROGRAM ----
