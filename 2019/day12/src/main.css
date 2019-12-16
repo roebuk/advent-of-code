@@ -1,0 +1,79 @@
+/*
+  elm-hot creates an additional div wrapper around the app to make HMR possible.
+  This could break styling in development mode if you are using Elm UI.
+
+  More context in the issue:
+    https://github.com/halfzebra/create-elm-app/issues/320
+*/
+[data-elm-hot="true"] {
+  height: inherit;
+}
+
+:root {
+  --moonColourOne: #68B2F8;
+  --moonColourTwo: #506EE5;
+  --moonColourThree: #7037CD;
+  --moonColourFour: #651F71;
+}
+
+body {
+  font-family: 'Source Sans Pro', 'Trebuchet MS', 'Lucida Grande', 'Bitstream Vera Sans', 'Helvetica Neue', sans-serif;
+  margin: 0;
+  text-align: center;
+  color: #293c4b;
+  background: #07102d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  width: 500px;
+}
+
+.text {
+  margin: 0 0 1rem 0;
+  font-size: 20px;
+  color: #584eaa;
+  letter-spacing: 7px;
+  text-transform: uppercase;
+}
+
+.text.mod-large {
+  font-size: 40px;
+}
+
+.moon {
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  border-radius: 50%;
+  transform-origin: 250px 250px;
+  opacity: 0.8;
+  transform-origin: center;
+  transition: transform 0.1s ease;
+}
+
+.moon:nth-child(1) {
+  background: var(--moonColourOne);
+  box-shadow: 0 0 15px var(--moonColourOne);
+}
+
+.moon:nth-child(2) {
+  background: var(--moonColourTwo);
+  box-shadow: 0 0 15px var(--moonColourTwo);
+}
+
+.moon:nth-child(3) {
+  background: var(--moonColourThree);
+  box-shadow: 0 0 15px var(--moonColourThree);
+}
+
+.moon:nth-child(4) {
+  background: var(--moonColourFour);
+  box-shadow: 0 0 15px var(--moonColourFour);
+}
