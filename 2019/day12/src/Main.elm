@@ -1,7 +1,7 @@
 module Main exposing (Model, Moon, Msg(..), init, main, update, view)
 
-import Dict exposing (Dict)
 import Browser
+import Dict exposing (Dict)
 import Html exposing (Html, div, p, text)
 import Html.Attributes as Attrs
 import List.Extra exposing (uniquePairs)
@@ -37,25 +37,29 @@ type alias Model =
 
 
 neutralMoon : Moon
-neutralMoon = Moon "i" { x = 1, y = 2, z = -9 } defaultVelocity
+neutralMoon =
+    Moon "i" { x = 1, y = 2, z = -9 } defaultVelocity
 
 
 defaultVelocity : Vec3
-defaultVelocity = { x = 0, y = 0, z = 0}
+defaultVelocity =
+    { x = 0, y = 0, z = 0 }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( { moons = Dict.fromList
-        [ ("i", Moon "i" { x = 1, y = 2, z = -9 } defaultVelocity)
-        , ("e", Moon "e" { x = -1, y = -9, z = -4 } defaultVelocity)
-        , ("g", Moon "g" { x = 17, y = 6, z = 8 } defaultVelocity)
-        , ("c", Moon "c" { x = 12, y = 4, z = 2 } defaultVelocity)
-        ]
+    ( { moons =
+            Dict.fromList
+                [ ( "i", Moon "i" { x = 1, y = 2, z = -9 } defaultVelocity )
+                , ( "e", Moon "e" { x = -1, y = -9, z = -4 } defaultVelocity )
+                , ( "g", Moon "g" { x = 17, y = 6, z = 8 } defaultVelocity )
+                , ( "c", Moon "c" { x = 12, y = 4, z = 2 } defaultVelocity )
+                ]
       , step = 0
       }
     , Cmd.none
     )
+
 
 
 ---- HELPERS ----
@@ -66,9 +70,9 @@ maybeDanger maybeA =
     case maybeA of
         Just a ->
             a
+
         Nothing ->
             neutralMoon
-
 
 
 calcPotenialEnergy : Moon -> Int
@@ -86,36 +90,53 @@ calcEnergy moon =
     calcPotenialEnergy moon * calcKineticEnergy moon
 
 
+
 ---- UPDATE ----
 
 
-adjustGravity : Int -> Int -> Int -> Int -> (Int, Int)
+adjustGravity : Int -> Int -> Int -> Int -> ( Int, Int )
 adjustGravity velocityA velocityB a b =
     case compare a b of
         LT ->
-            (velocityA + 1, velocityB - 1)
+            ( velocityA + 1, velocityB - 1 )
+
         EQ ->
-            (velocityA, velocityB)
+            ( velocityA, velocityB )
+
         GT ->
-            (velocityA - 1, velocityB + 1)
+            ( velocityA - 1, velocityB + 1 )
 
 
-applyGravity :  ( String, String ) -> Dict String Moon -> Dict String Moon
+applyGravity : ( String, String ) -> Dict String Moon -> Dict String Moon
 applyGravity ( moonStrOne, moonStrTwo ) moons =
     {- Update the velocity once the n -}
     let
-        moonOne = Dict.get moonStrOne moons |> maybeDanger
-        moonTwo = Dict.get moonStrTwo moons |> maybeDanger
+        moonOne =
+            Dict.get moonStrOne moons |> maybeDanger
 
-        (newXOne, newXTwo) = adjustGravity moonOne.v.x moonTwo.v.x moonOne.p.x moonTwo.p.x
-        (newYOne, newYTwo) = adjustGravity moonOne.v.y moonTwo.v.y moonOne.p.y moonTwo.p.y
-        (newZOne, newZTwo) = adjustGravity moonOne.v.z moonTwo.v.z moonOne.p.z moonTwo.p.z
+        moonTwo =
+            Dict.get moonStrTwo moons |> maybeDanger
 
-        moonOneNewPosition = { x = newXOne, y = newYOne, z = newZOne}
-        moonOneNew = { moonOne | v = moonOneNewPosition }
-        moonTwoNewPosition = { x = newXTwo, y = newYTwo, z = newZTwo}
-        moonTwoNew = { moonTwo | v = moonTwoNewPosition }
+        ( newXOne, newXTwo ) =
+            adjustGravity moonOne.v.x moonTwo.v.x moonOne.p.x moonTwo.p.x
 
+        ( newYOne, newYTwo ) =
+            adjustGravity moonOne.v.y moonTwo.v.y moonOne.p.y moonTwo.p.y
+
+        ( newZOne, newZTwo ) =
+            adjustGravity moonOne.v.z moonTwo.v.z moonOne.p.z moonTwo.p.z
+
+        moonOneNewPosition =
+            { x = newXOne, y = newYOne, z = newZOne }
+
+        moonOneNew =
+            { moonOne | v = moonOneNewPosition }
+
+        moonTwoNewPosition =
+            { x = newXTwo, y = newYTwo, z = newZTwo }
+
+        moonTwoNew =
+            { moonTwo | v = moonTwoNewPosition }
     in
     moons
         |> Dict.insert moonStrOne moonOneNew
@@ -125,15 +146,20 @@ applyGravity ( moonStrOne, moonStrTwo ) moons =
 calcVelocity : Moon -> Moon
 calcVelocity moon =
     let
-        velocity = moon.v
-        postition = moon.p
+        velocity =
+            moon.v
+
+        postition =
+            moon.p
+
         newPosition =
             { x = postition.x + velocity.x
             , y = postition.y + velocity.y
             , z = postition.z + velocity.z
             }
     in
-    {moon | p = newPosition}
+    { moon | p = newPosition }
+
 
 type Msg
     = Step Time.Posix
@@ -144,10 +170,13 @@ update msg model =
     case msg of
         Step _ ->
             let
-                pairs = Dict.keys model.moons |> uniquePairs
-                updatedMoons = pairs
-                    |> List.foldl applyGravity model.moons
-                    |> Dict.map (\_ moon -> calcVelocity moon)
+                pairs =
+                    Dict.keys model.moons |> uniquePairs
+
+                updatedMoons =
+                    pairs
+                        |> List.foldl applyGravity model.moons
+                        |> Dict.map (\_ moon -> calcVelocity moon)
             in
             ( { model | step = model.step + 1, moons = updatedMoons }, Cmd.none )
 
@@ -156,8 +185,8 @@ update msg model =
 ---- VIEW ----
 
 
-viewMoon :  ( String, Moon ) -> Html msg
-viewMoon (_, moon) =
+viewMoon : ( String, Moon ) -> Html msg
+viewMoon ( _, moon ) =
     let
         x =
             String.fromInt moon.p.x
@@ -193,11 +222,13 @@ view model =
                 |> String.fromInt
     in
     div []
-        [ div [ Attrs.class "container" ]
-          <| List.map viewMoon moonList
+        [ div [ Attrs.class "container" ] []
+
+        --   <| List.map viewMoon moonList
         , p [ Attrs.class "text" ] [ text "Total system energy" ]
         , p [ Attrs.class "text mod-large" ] [ text totalEnergy ]
         ]
+
 
 
 ---- PROGRAM ----
@@ -216,7 +247,7 @@ main =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     if model.step < 1000 then
-        Time.every (1000 / 10) Step
+        Time.every 0.1 Step
 
     else
         Sub.none
