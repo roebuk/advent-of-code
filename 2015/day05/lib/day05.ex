@@ -4,10 +4,6 @@ defmodule Day05 do
   """
 
   @doc """
-  Hello world.
-
-  ## Examples
-
       iex> Day05.contains_bad_string("")
       false
 
@@ -19,14 +15,10 @@ defmodule Day05 do
   """
   @spec contains_bad_string(String.t()) :: boolean
   def contains_bad_string(str) do
-    Regex.match?(~r/(ab|cd|pq|or|xy)/, str)
+    Regex.match?(~r/(ab|cd|pq|xy)/, str)
   end
 
   @doc """
-  Hello world.
-
-  ## Examples
-
       iex> Day05.contains_at_least_three_vowels("")
       false
 
@@ -42,45 +34,49 @@ defmodule Day05 do
   end
 
   @doc """
-  Hello world.
+    iex> Day05.contains_seq_chars("")
+    false
 
-  ## Examples
+    iex> Day05.contains_seq_chars("aeiou")
+    false
 
-      iex> Day05.contains_seq_chars("")
-      false
-
-      iex> Day05.contains_seq_chars("aeiou")
-      false
-
-      iex> Day05.contains_seq_chars("affjgi")
-      true
+    iex> Day05.contains_seq_chars("affjgi")
+    true
   """
   @spec contains_seq_chars(String.t()) :: boolean
   def contains_seq_chars(str) do
-    Regex.match?(~r/(.)\1/, str)
+    Regex.match?(~r/(\w)\1/, str)
   end
 
   @doc """
-  Hello world.
+    iex> Day05.validate_string("ugknbfddgicrmopn")
+    true
 
-  ## Examples
+    iex> Day05.contains_seq_chars("jchzalrnumimnmhp")
+    false
 
-      iex> Day05.contains_seq_chars("")
-      false
-
-      iex> Day05.contains_seq_chars("jchzalrnumimnmhp")
-      false
-
-      iex> Day05.contains_seq_chars("haegwjzuvuyypxyu")
-      false
+    iex> Day05.contains_seq_chars("haegwjzuvuyypxyu")
+    true
   """
   @spec validate_string(String.t()) :: boolean
   def validate_string(str) do
-    contains_seq_chars(str) &&
-      contains_at_least_three_vowels(str) &&
-      !contains_bad_string(str)
+    good_string? = contains_seq_chars(str) && contains_at_least_three_vowels(str)
+    bad_string? = contains_bad_string(str)
+
+    cond do
+      bad_string? ->
+        false
+
+      good_string? ->
+        true
+
+      true ->
+        false
+
+    end
   end
 
+  @spec run :: non_neg_integer
   def run do
     File.read!("./input.txt")
     |> String.split("\n", trim: true)
