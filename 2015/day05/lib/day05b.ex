@@ -1,17 +1,17 @@
-defmodule Recur do
+defmodule Day05b do
   @doc """
-    iex> Recur.pair_appears_twice("aaa")
+    iex> pair_appears_twice("aaa")
     false
 
-    iex> Recur.pair_appears_twice("aaaa")
+    iex> pair_appears_twice("aaaa")
     true
 
-    iex> Recur.pair_appears_twice("xyxy")
+    iex> pair_appears_twice("xyxy")
     true
 
-    iex> Recur.pair_appears_twice("aabcdefgaa")
+    iex> pair_appears_twice("aabcdefgaa")
     true
-    """
+  """
   @spec pair_appears_twice(String.t()) :: boolean()
   def pair_appears_twice(str) when is_binary(str) do
     {pair, tail} = String.split_at(str, 2)
@@ -28,10 +28,7 @@ defmodule Recur do
         false
     end
   end
-end
 
-
-defmodule Day05b do
   @doc """
     iex> Day05b.surrounding_letters?(["a", "b", "a"])
     true
